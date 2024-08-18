@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "808333295619",
+    "project_id": "newhostel-55245",
+    "storage_bucket": "newhostel-55245.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808333295619:android:4ee5fcd2ff4b61f8c90e36",
+        "android_client_info": {
+          "package_name": "eu.tutorials.chatroomapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZ8MaJ9g7CjjTcg8VQZqdmhyE8VgNjgO8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
