@@ -1,5 +1,6 @@
 package eu.tutorials.mywishlistapp
 
+import AuthViewModel
 import WishViewModel
 import android.annotation.SuppressLint
 import android.widget.Toast
@@ -42,7 +43,6 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import eu.tutorials.chatroomapp.Screen
-import eu.tutorials.chatroomapp.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await

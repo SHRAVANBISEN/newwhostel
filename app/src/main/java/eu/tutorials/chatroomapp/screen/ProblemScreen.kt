@@ -1,5 +1,6 @@
 package eu.tutorials.chatroomapp.screen
 
+import AuthViewModel
 import WishViewModel
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -39,8 +40,6 @@ import eu.tutorials.chatroomapp.R
 import eu.tutorials.chatroomapp.Screen
 import eu.tutorials.chatroomapp.data.Result
 import eu.tutorials.chatroomapp.data.Wish
-import eu.tutorials.chatroomapp.viewmodel.AppBarView
-import eu.tutorials.chatroomapp.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -169,7 +168,7 @@ fun WishItem(wish: Wish, onClick: () -> Unit) {
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth()
-            .clickable(onClick = onClick),
+            ,
         elevation = 8.dp,
         backgroundColor = Color.White,
     ) {

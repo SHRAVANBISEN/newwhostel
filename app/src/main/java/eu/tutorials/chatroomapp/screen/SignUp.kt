@@ -17,7 +17,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import eu.tutorials.chatroomapp.Screen
 import eu.tutorials.chatroomapp.data.Result
-import eu.tutorials.chatroomapp.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

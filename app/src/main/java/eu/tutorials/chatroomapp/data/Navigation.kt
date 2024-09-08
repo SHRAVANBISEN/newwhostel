@@ -1,8 +1,10 @@
 package eu.tutorials.chatroomapp.data
 
+import AuthViewModel
 import SignupScreen
 import WishViewModel
 import android.app.Activity
+import android.content.Context
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -11,21 +13,31 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import eu.tutorials.chatroomapp.Screen
 import eu.tutorials.chatroomapp.screen.*
-import eu.tutorials.chatroomapp.viewmodel.AuthViewModel
 import eu.tutorials.mywishlistapp.AddEditDetailView
-import androidx.lifecycle.viewmodel.compose.viewModel
+
 
 @Composable
 fun NavigationGraph(
     navController: NavHostController,
     authViewModel: AuthViewModel,
     wishViewModel: WishViewModel
-) {
+) {// NavigationGraph.kt
+    val context = navController.context
+    fun isPrincipalUserOnLaunch(context: Context): Boolean {
+        val sharedPreferences = context.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getBoolean("isPrincipalUser", false)
+    }
+    val isPrincipalUser = remember { isPrincipalUserOnLaunch(context) }
+
     val isUserLoggedIn: Boolean by authViewModel.isUserLoggedIn.observeAsState(initial = false)
 
     NavHost(
         navController = navController,
-        startDestination = if (isUserLoggedIn) Screen.HomeScreen.route else Screen.DefaultScreen.route
+        startDestination = when {
+            isUserLoggedIn && isPrincipalUser -> Screen.PrincipleScreen.route
+            isUserLoggedIn -> Screen.HomeScreen.route
+            else -> Screen.DefaultScreen.route
+        }
     ) {
         composable(Screen.SignupScreen.route) {
             SignupScreen(

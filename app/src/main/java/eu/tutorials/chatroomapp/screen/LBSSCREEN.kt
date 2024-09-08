@@ -1,5 +1,6 @@
 package eu.tutorials.chatroomapp.screen
 
+import AuthViewModel
 import WishViewModel
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -30,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -39,8 +41,6 @@ import eu.tutorials.chatroomapp.R
 import eu.tutorials.chatroomapp.Screen
 import eu.tutorials.chatroomapp.data.Result
 import eu.tutorials.chatroomapp.data.Wish
-import eu.tutorials.chatroomapp.viewmodel.AppBarView
-import eu.tutorials.chatroomapp.viewmodel.AuthViewModel
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -134,13 +134,14 @@ fun LBSWishItem(wish: Wish, onClick: () -> Unit) {
         modifier = Modifier
             .padding(16.dp)
             .fillMaxWidth()
-            .clickable(onClick = onClick),
+            ,
         elevation = 8.dp,
         backgroundColor = Color.White,
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
-        ) {
+        ) {            Text(text = "Room No : ${wish.roomnum}", style = MaterialTheme.typography.h6 , textAlign = TextAlign.Center)
+
             Text(text = wish.title, style = MaterialTheme.typography.h6)
             Text(text = wish.description, style = MaterialTheme.typography.body1)
         }

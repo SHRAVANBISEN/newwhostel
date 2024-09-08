@@ -1,5 +1,6 @@
 package eu.tutorials.chatroomapp
 
+import AuthViewModel
 import WishViewModel
 import android.os.Build
 import android.os.Bundle
@@ -23,7 +24,6 @@ import eu.tutorials.chatroomapp.data.NavigationGraph
 import eu.tutorials.chatroomapp.data.UserRepository
 import eu.tutorials.chatroomapp.screen.LoginScreen
 import eu.tutorials.chatroomapp.ui.theme.ChatRoomAppTheme
-import eu.tutorials.chatroomapp.viewmodel.AuthViewModel
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)

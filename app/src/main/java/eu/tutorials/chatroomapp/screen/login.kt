@@ -1,5 +1,6 @@
 package eu.tutorials.chatroomapp.screen
 
+import AuthViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -16,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.*
 import eu.tutorials.chatroomapp.R
 import eu.tutorials.chatroomapp.data.Result
-import eu.tutorials.chatroomapp.viewmodel.AuthViewModel
 
 @Composable
 fun LoginScreen(
@@ -102,7 +102,7 @@ fun LoginScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color(0x88000000)) // Optional: semi-transparent background
+                    .background(Color.White) // Optional: semi-transparent background
                     .clickable(enabled = false) {}, // Block clicks while loading
                 contentAlignment = Alignment.Center
             ) {

@@ -1,5 +1,6 @@
 package eu.tutorials.chatroomapp.screen
 
+import AuthViewModel
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import eu.tutorials.chatroomapp.Screen
-import eu.tutorials.chatroomapp.viewmodel.AuthViewModel
 
 
 @Composable
