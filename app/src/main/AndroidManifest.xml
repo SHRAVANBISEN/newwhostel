@@ -21,10 +21,11 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/purple_200" />
         <activity
+            android:theme="@style/Theme.App.Splashscreen"
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.ChatRoomApp">
+            android:label="@string/app_name">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
