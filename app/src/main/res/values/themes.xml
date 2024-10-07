@@ -4,11 +4,10 @@
     <style name="Theme.ChatRoomApp" parent="android:Theme.Material.Light.NoActionBar" />
 
 
-
     <style name="Theme.App.Splashscreen" parent= "Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/nmb</item>
+        <item name="windowSplashScreenBackground">@color/black</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/avd_hosty</item>
-        <item name="android:windowSplashScreenBrandingImage" tools:ignore="NewApi">@drawable/devogs</item>
+        <item name="android:windowSplashScreenBrandingImage" tools:ignore="NewApi">@drawable/devwhite</item>
         <item name="postSplashScreenTheme">@style/Theme.ChatRoomApp</item>
     </style>
 

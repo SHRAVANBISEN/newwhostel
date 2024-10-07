@@ -83,7 +83,11 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.8.0")
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
     implementation("androidx.compose.ui:ui")
+
+    //for using lottifiles
     implementation ("com.airbnb.android:lottie-compose:6.0.0")
+
+
     implementation("androidx.core:core-splashscreen:1.0.0")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")

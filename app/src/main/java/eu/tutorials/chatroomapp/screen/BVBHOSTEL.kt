@@ -95,17 +95,7 @@ fun BVBVIEW(
                     }
                 },
                 title = { Text(text = "BVB Problems", color = colorResource(id = R.color.white)) },
-                actions = {
-                    IconButton(onClick = {
-                        authViewModel.logout()
-                        navController.navigate(Screen.DefaultScreen.route) {
-                            popUpTo(Screen.BVBHOSTEL.route) { inclusive = true }
-                            popUpTo(0) // Ensure to pop to the root
-                        }
-                    }) {
-                        Icon(Icons.Default.ExitToApp, contentDescription = "Logout", tint = Color.White)
-                    }
-                }
+
             )
         }
     ) {

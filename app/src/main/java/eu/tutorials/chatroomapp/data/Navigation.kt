@@ -52,7 +52,9 @@ fun NavigationGraph(
             DefaultView(navController = navController ,authViewModel = authViewModel)
         }
         composable(Screen.PrincipleScreen.route) {
-            PrincipleScreen(navController = navController )
+            PrincipleScreen( navController = navController,
+                viewModel = wishViewModel,
+                authViewModel = authViewModel)
         }
         composable(Screen.LoginScreen.route) {
             LoginScreen(
