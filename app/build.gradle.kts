@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    namespace = "eu.tutorials.chatroomapp"
-    compileSdk = 34
+    namespace = "eu.tutorials.HostelConnect"
+    compileSdk = 35
 
     defaultConfig {
-        applicationId = "eu.tutorials.chatroomapp"
+        applicationId = "eu.tutorials.HostelConnect"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -50,46 +50,47 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    buildToolsVersion = "35.0.0"
 }
 
 dependencies {
-    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
 
 
-    implementation("androidx.compose.runtime:runtime-livedata:1.6.8")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose-android:2.8.2")
-    val nav_version = "2.7.5"
-    val compose_version = "1.6.0"
+    implementation("androidx.compose.runtime:runtime-livedata:1.7.4")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose-android:2.8.6")
+    val nav_version = "2.8.3"
+    val compose_version = "1.7.4"
 
 
-    implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
-    implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore")
-    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.30.0")
+    implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
+    implementation("com.google.firebase:firebase-auth:23.0.0")
+    implementation("com.google.firebase:firebase-firestore:25.1.0")
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.36.0")
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation("androidx.compose.ui:ui:$compose_version")
     implementation("androidx.compose.material:material:$compose_version")
     implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
-    implementation("com.google.firebase:firebase-analytics")
-    implementation ("androidx.compose.ui:ui:1.1.0")
-    implementation ("androidx.compose.material:material:1.1.0")
+    implementation("com.google.firebase:firebase-analytics:22.1.2")
+    implementation ("androidx.compose.ui:ui:1.7.4")
+    implementation ("androidx.compose.material:material:1.7.4")
 
-    implementation ("androidx.compose.material3:material3:1.1.0")
-    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.30.0")//
+    implementation ("androidx.compose.material3:material3:1.3.0")
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.36.0")//
 
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.8.0")
-    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
+    implementation("androidx.activity:activity-compose:1.9.3")
+    implementation(platform("androidx.compose:compose-bom:2024.10.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.10.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.8.0-alpha04")
 }
