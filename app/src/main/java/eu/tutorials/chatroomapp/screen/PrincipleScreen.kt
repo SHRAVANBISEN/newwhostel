@@ -99,26 +99,42 @@ fun PrincipleScreen(
                     )
                     .padding(paddingValues) // Apply padding from the scaffold content
             ) {
-                // Define categories
-                val categories = listOf("ALP", "BVB", "GANGA", "LBS", "AKK")
 
-                // Lazy Grid Layout for displaying the items
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(1), // You can change this to GridCells.Fixed(2) for two columns
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp), // Spacing for better aesthetics
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Top // This ensures that the Lazy Grid doesn't take all space
                 ) {
-                    items(categories) { cat ->
-                        BrowserItem(navController, cat)
+                    val categories = listOf("ALP", "BVB", "GANGA", "LBS", "AKK")
+
+                    // Lazy Grid Layout for displaying the items
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(1), // One column as in the original code
+                        modifier = Modifier
+                            .weight(1f) // Give Lazy Grid a weight so it doesn't fill all space
+                            .padding(16.dp), // Spacing for better aesthetics
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(categories) { cat ->
+                            BrowserItem(navController, cat)
+                        }
+                    }
+
+                    // Button for room details
+                    Button(
+                        onClick = { navController.navigate(Screen.RoomDet.route) },
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        Text(text = "Room Details")
                     }
                 }
             }
         }
     )
 }
+
+
 @SuppressLint("UnusedCrossfadeTargetStateParameter")
 @Composable
 fun BrowserItem(navController: NavController, cat: String) {

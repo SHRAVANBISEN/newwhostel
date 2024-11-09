@@ -72,10 +72,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         _authResult.value = null
     }
 
-    fun signUp(email: String, password: String, firstName: String, hostelName: String, roomNumber: String) {
+    fun signUp(email: String, password: String, firstName: String, hostelName: String, priority: String , occupancy : String) {
         viewModelScope.launch {
             setLoading(true)
-            val result = userRepository.signUp(email, password, firstName, hostelName, roomNumber)
+            val result = userRepository.signUp(email, password, firstName, hostelName, priority ,occupancy)
             _authResult.value = result
             setLoading(false)
         }
@@ -97,7 +97,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             apply()
         }
     }
-
+    fun clearAllAuthStates() {
+        _authResult.value = null
+        _isUserLoggedIn.value = false
+    }
     fun isPrincipalUser(email: String, password: String): Boolean {
         return email == principalUserId && password == principalUserPassword
     }

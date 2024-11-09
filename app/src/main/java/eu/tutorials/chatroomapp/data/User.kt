@@ -4,6 +4,7 @@ data class User(
     val firstName: String = "",
     val email: String = "",
     var hostelName: String = "",
-    val roomNumber: String = "",
-    val id: String = ""
+    val prioritynum: String = "",
+
+    val occupancy: String  = ""
 )

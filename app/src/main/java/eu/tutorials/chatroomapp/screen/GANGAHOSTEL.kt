@@ -94,17 +94,6 @@ fun GANGAVIEW(
                     }
                 },
                 title = { Text(text = "GANGA Problems", color = colorResource(id = R.color.white)) },
-                actions = {
-                    IconButton(onClick = {
-                        authViewModel.logout()
-                        navController.navigate(Screen.DefaultScreen.route) {
-                            popUpTo(Screen.HomeScreen.route) { inclusive = true }
-                            popUpTo(0) // Ensure to pop to the root
-                        }
-                    }) {
-                        Icon(Icons.Default.ExitToApp, contentDescription = "Logout", tint = Color.White)
-                    }
-                }
             )
         }
     ) {

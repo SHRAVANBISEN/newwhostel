@@ -193,7 +193,7 @@ fun AddEditDetailView(
                     },
                     modifier = Modifier.padding(top = 16.dp)
                 ) {
-                    Text(text = "Add Wish")
+                    Text(text = "Add Problem")
                 }
             }
         }

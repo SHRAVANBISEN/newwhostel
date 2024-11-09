@@ -1,6 +1,7 @@
 package eu.tutorials.chatroomapp.data
 
 import AuthViewModel
+import RoomDet
 import SignupScreen
 import WishViewModel
 import android.app.Activity
@@ -35,7 +36,7 @@ fun NavigationGraph(
         navController = navController,
         startDestination = when {
             isUserLoggedIn && isPrincipalUser -> Screen.PrincipleScreen.route
-            isUserLoggedIn -> Screen.HomeScreen.route
+            isUserLoggedIn -> Screen.StudentsScreen.route
             else -> Screen.DefaultScreen.route
         }
     ) {
@@ -51,6 +52,17 @@ fun NavigationGraph(
         composable(Screen.DefaultScreen.route) {
             DefaultView(navController = navController ,authViewModel = authViewModel)
         }
+        composable(Screen.RoomAllotment.route) {
+            RoomAllotment(navController = navController ,authViewModel = authViewModel)
+        }
+        composable(Screen.StudentsScreen.route) {
+            StudentScreen(navController = navController , authViewModel = authViewModel)
+        }
+
+
+        composable(Screen.RoomDet.route) {
+            RoomDet(navController = navController )
+        }
         composable(Screen.PrincipleScreen.route) {
             PrincipleScreen( navController = navController,
                 viewModel = wishViewModel,
@@ -61,7 +73,7 @@ fun NavigationGraph(
                 authViewModel = authViewModel,
                 onNavigateToSignUp = { navController.navigate(Screen.SignupScreen.route) },
                 onSignInSuccess = {
-                    navController.navigate(Screen.HomeScreen.route) {
+                    navController.navigate(Screen.StudentsScreen.route) {
                         popUpTo(Screen.LoginScreen.route) { inclusive = true }
                     }
                 },

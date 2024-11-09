@@ -32,10 +32,15 @@ fun SignupScreen(
     var expanded by remember { mutableStateOf(false) }
     var selectedHostel by remember { mutableStateOf("") }
     val hostelOptions = listOf("LBS", "BVB", "GANGA" , "ALP" , "AKM")
+
+    // Dropdown menu for occupancy
+    var expandedx by remember { mutableStateOf(false) }
+    var selectedoccupancy by remember { mutableStateOf("") }
+    val occupancy = listOf("single", "double", "triple" )
     // Dropdown menu variables for roomnum
     var expandedo by remember { mutableStateOf(false) }
-    var slectedroomnum by remember { mutableStateOf("") }
-    val roonum =  (100..500).map { it.toString() }
+    var selectedpriority by remember { mutableStateOf("") }
+    val prioritynum =  (1..100).map { it.toString() }
 
     val authResult by authViewModel.authResult.observeAsState()
 
@@ -74,10 +79,10 @@ fun SignupScreen(
             onExpandedChange = { expandedo = !expandedo }
         ) {
             OutlinedTextField(
-                value = slectedroomnum,
+                value = selectedpriority,
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Select Room no.") },
+                label = { Text("Select priority no.") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
@@ -88,11 +93,11 @@ fun SignupScreen(
                 expanded = expandedo,
                 onDismissRequest = { expandedo = false }
             ) {
-                roonum.forEach { roomnum ->
+                prioritynum.forEach { roomnum ->
                     DropdownMenuItem(
                         text = { Text(roomnum) },
                         onClick = {
-                            slectedroomnum = roomnum
+                            selectedpriority = roomnum
                             expandedo = false
                         }
                     )
@@ -130,15 +135,47 @@ fun SignupScreen(
                 }
             }
         }
+        // Dropdown menu for occupnacy
+        ExposedDropdownMenuBox(
+            expanded = expandedx,
+            onExpandedChange = { expandedx = !expandedx }
+        ) {
+            OutlinedTextField(
+                value = selectedoccupancy,
+                onValueChange = {},
+                readOnly = true,
+                label = { Text("Select occupancy") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+                    .menuAnchor(),
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedx) }
+            )
+            ExposedDropdownMenu(
+                expanded = expandedx,
+                onDismissRequest = { expandedx= false }
+            ) {
+                occupancy.forEach { occupancy ->
+                    DropdownMenuItem(
+                        text = { Text(occupancy) },
+                        onClick = {
+                            selectedoccupancy = occupancy
+                            expandedx = false
+                        }
+                    )
+                }
+            }
+        }
 
         Button(
             onClick = {
-                authViewModel.signUp(email, password, firstName, selectedHostel, slectedroomnum)
+                authViewModel.signUp(email, password, firstName, selectedHostel, selectedpriority ,selectedoccupancy)
                 email = ""
                 password = ""
                 firstName = ""
                 selectedHostel = ""
-                slectedroomnum = ""
+                selectedpriority = ""
+                selectedoccupancy= ""
             },
             modifier = Modifier.fillMaxWidth().padding(8.dp)
         ) {
@@ -146,7 +183,9 @@ fun SignupScreen(
         }
         Spacer(modifier = Modifier.height(16.dp))
         Text("Already have an account? Sign in.",
-            modifier = Modifier.clickable { onNavigateToLogin() }
+            modifier = Modifier.clickable {
+                authViewModel.clearAllAuthStates() // Clear any leftover auth states
+                onNavigateToLogin() }
         )
 
         authResult?.let { result ->

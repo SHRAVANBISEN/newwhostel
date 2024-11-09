@@ -51,7 +51,6 @@ fun AKKVIEW(
 ) {
     val isLoading by authViewModel.isLoading.observeAsState(initial = false)
     val wishes by viewModel.wishes.collectAsStateWithLifecycle(emptyList())
-
     val systemUiController = rememberSystemUiController()
     val statusBarColor = Color.Black
     LaunchedEffect(true) {

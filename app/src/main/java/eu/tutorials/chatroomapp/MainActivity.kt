@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Thread.sleep(2000)
+        Thread.sleep(50)
         installSplashScreen()
         setContent {
             val navController = rememberNavController()

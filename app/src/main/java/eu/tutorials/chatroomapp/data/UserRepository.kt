@@ -9,10 +9,10 @@ class UserRepository(
     private val firestore: FirebaseFirestore
 ) {
 
-    suspend fun signUp(email: String, password: String, firstName: String, hostelName: String, roomNumber: String): Result<Boolean> =
+    suspend fun signUp(email: String, password: String, firstName: String, hostelName: String, prioritynum: String , occupancy:String): Result<Boolean> =
         try {
             auth.createUserWithEmailAndPassword(email, password).await()
-            val user = User(firstName, email, hostelName, roomNumber)
+            val user = User(firstName, email, hostelName, prioritynum , occupancy)
             saveUserToFirestore(user)
             Result.Success(true)
         } catch (e: Exception) {
@@ -55,6 +55,7 @@ class UserRepository(
     fun isUserLoggedIn(): Boolean {
         return auth.currentUser != null
     }
+
 
     fun logout() {
         auth.signOut()
