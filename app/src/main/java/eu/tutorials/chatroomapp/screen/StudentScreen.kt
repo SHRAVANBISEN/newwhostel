@@ -127,7 +127,7 @@ fun StudentScreen(navController: NavController ,authViewModel: AuthViewModel) {
 
                     Image(
                         painter = painterResource(id = R.drawable.jlogo), // Add logo if used in login/signup
-                        contentDescription = "App Logo",
+                        contentDescription = "APP_LOGO",
                         modifier = Modifier.size(80.dp).padding(bottom = 16.dp)
                     )
 
