@@ -1,12 +1,18 @@
 package eu.tutorials.chatroomapp.screen
 
 import AuthViewModel
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.*
@@ -15,7 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.firebase.auth.FirebaseAuth
@@ -30,11 +38,11 @@ fun StudentScreen(navController: NavController ,authViewModel: AuthViewModel) {
     var isLoading by remember { mutableStateOf(true) }
 
     val systemUiController = rememberSystemUiController()
-    val statusBarColor = Color.Black
+    val statusBarColor = Color(0xFF003366)
     LaunchedEffect(true) {
         systemUiController.setStatusBarColor(
             color = statusBarColor,
-            darkIcons = true
+            darkIcons = false
         )
     }
     // Function to fetch user data
@@ -59,23 +67,24 @@ fun StudentScreen(navController: NavController ,authViewModel: AuthViewModel) {
                 modifier = Modifier.fillMaxWidth(),
                 scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = colorResource(id = R.color.black)
+                    containerColor = Color.Black
                 ),
                 title = {
-                    androidx.compose.material.Text(
+                    Text(
                         text = "Home",
-                        color = colorResource(id = R.color.white)
+                        color = Color.White,
+                        fontSize = 18.sp
                     )
                 },
                 actions = {
-                    androidx.compose.material.IconButton(onClick = {
+                    IconButton(onClick = {
                         authViewModel.logout()
                         navController.navigate(Screen.DefaultScreen.route) {
                             popUpTo(Screen.HomeScreen.route) { inclusive = true }
                             popUpTo(0) // Ensure to pop to the root
                         }
                     }) {
-                        androidx.compose.material.Icon(
+                        Icon(
                             Icons.Default.ExitToApp,
                             contentDescription = "Logout",
                             tint = Color.White
@@ -86,39 +95,82 @@ fun StudentScreen(navController: NavController ,authViewModel: AuthViewModel) {
         }
     ) { paddingValues ->
         if (isLoading) {
-         Text(text = "Loading....")
-        } else {
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .background(Color(0xFF003366)),
+                contentAlignment = Alignment.Center
             ) {
-                Button(
-                    onClick = { navController.navigate(Screen.RoomAllotment.route) },
-                    enabled = roomNumber.isNullOrEmpty() // Enable if roomNumber is empty
+                Text(
+                    text = "Loading...",
+                    color = Color.White,
+                    fontSize = 18.sp
+                )
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFF180b42))
+                    .padding(paddingValues),
+                contentAlignment = Alignment.Center
+            ){
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                        .background(Color.White, shape = RoundedCornerShape(16.dp)) // White container with rounded corners
+                        .padding(32.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = "Allotment")
-                }
 
-                Spacer(modifier = Modifier.padding(8.dp))
+                    Image(
+                        painter = painterResource(id = R.drawable.jlogo), // Add logo if used in login/signup
+                        contentDescription = "App Logo",
+                        modifier = Modifier.size(80.dp).padding(bottom = 16.dp)
+                    )
 
-                Button(
-                    onClick = { /* Navigate to rules screen */ },
-                    enabled = true // Rules button can always be enabled
-                ) {
-                    Text(text = "Rules")
-                }
+                    Button(
+                        onClick = { navController.navigate(Screen.RoomAllotment.route) },
+                        enabled = roomNumber.isNullOrEmpty(), // Enable if roomNumber is empty
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3B5998)), // Blue button color
+                        shape = RoundedCornerShape(24.dp)
+                    ) {
+                        Text(text = "Allotment", color = Color.White)
+                    }
 
-                Spacer(modifier = Modifier.padding(8.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                Button(
-                    onClick = { navController.navigate(Screen.HomeScreen.route) },
-                    enabled = !roomNumber.isNullOrEmpty() // Enable if roomNumber is not empty
-                ) {
-                    Text(text = "Problems")
+                    Button(
+                        onClick = { /* Navigate to rules screen */ },
+                        enabled = true, // Rules button can always be enabled
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3B5998)),
+                        shape = RoundedCornerShape(24.dp)
+                    ) {
+                        Text(text = "Rules", color = Color.White)
+                    }
+
+                    Spacer(modifier = Modifier.padding(16.dp))
+
+                    Button(
+                        onClick = { navController.navigate(Screen.HomeScreen.route) },
+                        enabled = !roomNumber.isNullOrEmpty(), // Enable if roomNumber is not empty
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3B5998)), // Dark red color for Problems button
+                        shape = RoundedCornerShape(24.dp)
+
+                    ) {
+                        Text(text = "Problems")
+                    }
                 }
             }
         }
