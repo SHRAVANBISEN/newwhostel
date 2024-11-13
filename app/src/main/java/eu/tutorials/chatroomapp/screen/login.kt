@@ -101,7 +101,8 @@ fun LoginScreen(
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
+                        .padding(8.dp),
+                    singleLine = true,
                 )
 
                 // Password TextField
@@ -116,6 +117,7 @@ fun LoginScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
+                    maxLines = 1
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
