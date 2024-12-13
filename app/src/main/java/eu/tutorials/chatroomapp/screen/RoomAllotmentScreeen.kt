@@ -10,13 +10,17 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import eu.tutorials.chatroomapp.R
 import eu.tutorials.chatroomapp.Screen
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -32,7 +36,7 @@ fun RoomAllotment(navController: NavController, authViewModel: AuthViewModel) {
     val db = FirebaseFirestore.getInstance()
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val privilegedUserId = "shravan@gmail.com"
+    val privilegedUserId = "shravanbisen@gmail.com"
     val currentUserId = FirebaseAuth.getInstance().currentUser?.email
     val isPrivilegedUser = currentUserId == privilegedUserId
 
@@ -49,7 +53,7 @@ fun RoomAllotment(navController: NavController, authViewModel: AuthViewModel) {
         db.collection("appData").document("priorityData")
             .addSnapshotListener { snapshot, e ->
                 if (e != null) {
-                    Toast.makeText(context, "Failed to fetch priority number", Toast.LENGTH_SHORT).show()
+                    // Toast.makeText(context, "Failed to fetch priority number", Toast.LENGTH_SHORT).show()
                     return@addSnapshotListener
                 }
                 if (snapshot != null && snapshot.exists()) {
@@ -71,19 +75,28 @@ fun RoomAllotment(navController: NavController, authViewModel: AuthViewModel) {
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Priority Number: $priorityNumber", style = MaterialTheme.typography.h6)
+            Text(text = "Priority Number: $priorityNumber", style = MaterialTheme.typography.h6 , color = colorResource(
+                id = R.color.black
+            ))
             Spacer(modifier = Modifier.width(8.dp))
             Button(onClick = {
                 coroutineScope.launch {
                     priorityNumber = fetchPriorityNumber()
                 }
-            }) {
+            } , colors = ButtonDefaults.buttonColors(colorResource(id = R.color.white))) {
                 Text("Refresh")
             }
         }
 
         // Show "Next" button for privileged user
         if (isPrivilegedUser) {
+            Row (modifier = Modifier.fillMaxWidth()){
+                Button(onClick = {  decrementPriorityNumber()
+                    Toast.makeText(context, "Priority number decremented ", Toast.LENGTH_SHORT).show()
+                }) {
+                    Text(text = "Previous")
+                }
+            }
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = {
                 incrementPriorityNumber()
@@ -95,7 +108,9 @@ fun RoomAllotment(navController: NavController, authViewModel: AuthViewModel) {
 
         // Occupancy sections
         Spacer(modifier = Modifier.height(16.dp))
-        Text("First Occupancy")
+        Text("Single Occupancy", fontSize = 20.sp , color = Color.White)
+        Spacer(modifier = Modifier.height(16.dp))
+
         RoomGrid(
             roomNumbers = listOf(1, 2, 3, 22, 33, 44, 55, 66, 77),
             navController = navController,
@@ -107,7 +122,10 @@ fun RoomAllotment(navController: NavController, authViewModel: AuthViewModel) {
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Double Occupancy")
+        Text("Double Occupancy" , fontSize = 20.sp , color = Color.White)
+        Spacer(modifier = Modifier.height(16.dp))
+
+
         RoomGrid(
             roomNumbers = listOf(4, 5, 6, 7, 56, 57, 58, 59, 60),
             navController = navController,
@@ -119,7 +137,9 @@ fun RoomAllotment(navController: NavController, authViewModel: AuthViewModel) {
         )
 
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Triple Occupancy")
+        Text("Triple Occupancy", fontSize = 20.sp , color = Color.White)
+        Spacer(modifier = Modifier.height(16.dp))
+
         RoomGrid(
             roomNumbers = listOf(8, 9, 10, 11, 12, 67, 68, 69, 70),
             navController = navController,
@@ -187,6 +207,8 @@ fun RoomGrid(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
+                colors = ButtonDefaults.buttonColors(contentColor = colorResource(id = R.color.nmb)),
+
                 enabled = isButtonEnabled
             ) {
                 Text(text = "Room $roomNumber")
@@ -358,16 +380,35 @@ private fun incrementPriorityNumberInDb(docRef: DocumentReference) {
         }
 }
 
-// Function to fetch the user's priority number asynchronously
-suspend fun getUserPriorityNumber(): Int {
-    val db = FirebaseFirestore.getInstance()
-    val userId = FirebaseAuth.getInstance().currentUser?.email ?: return 0
 
-    return try {
-        val document = db.collection("users").document(userId).get().await()
-        document.getLong("prioritynum")?.toInt() ?: 0
-    } catch (e: Exception) {
-        // Handle error or return a default priority number if fetching fails
-        0
-    }
+fun decrementPriorityNumber() {
+    val db = FirebaseFirestore.getInstance()
+    val docRef = db.collection("appData").document("priorityData")
+
+    // Ensure the document exists before attempting to decrement
+    docRef.get()
+        .addOnSuccessListener { document ->
+            if (!document.exists()) {
+                // If the document doesn't exist, create it with a default value
+                docRef.set(mapOf("priorityNumber" to 1))
+                    .addOnCompleteListener {
+                        decrementPriorityNumberInDb(docRef)
+                    }
+            } else {
+                decrementPriorityNumberInDb(docRef)
+            }
+        }
+        .addOnFailureListener {
+            // Handle errors if the document fetch fails
+        }
+}
+
+private fun decrementPriorityNumberInDb(docRef: DocumentReference) {
+    docRef.update("priorityNumber", FieldValue.increment(-1))
+        .addOnSuccessListener {
+            // Successfully decremented the priority number
+        }
+        .addOnFailureListener {
+            // Handle errors if the update fails
+        }
 }

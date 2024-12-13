@@ -110,7 +110,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     companion object {
-        private const val principalUserId = "user4@gmail.com"
+        private const val principalUserId = "warden@gmail.com"
         private const val principalUserPassword = "user444"
     }
 }
