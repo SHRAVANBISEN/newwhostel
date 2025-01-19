@@ -12,19 +12,26 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -33,7 +40,7 @@ import eu.tutorials.chatroomapp.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun StudentScreen(navController: NavController ,authViewModel: AuthViewModel) {
+fun StudentScreen(navController: NavController, authViewModel: AuthViewModel) {
     var roomNumber by remember { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(true) }
 
@@ -45,7 +52,7 @@ fun StudentScreen(navController: NavController ,authViewModel: AuthViewModel) {
             darkIcons = false
         )
     }
-    // Function to fetch user data
+
     LaunchedEffect(Unit) {
         val userId = FirebaseAuth.getInstance().currentUser?.email ?: return@LaunchedEffect
         FirebaseFirestore.getInstance().collection("users").document(userId)
@@ -61,116 +68,101 @@ fun StudentScreen(navController: NavController ,authViewModel: AuthViewModel) {
             }
     }
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                modifier = Modifier.fillMaxWidth(),
-                scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.Black
-                ),
-                title = {
-                    Text(
-                        text = "Home",
-                        color = Color.White,
-                        fontSize = 18.sp
-                    )
-                },
-                actions = {
-                    IconButton(onClick = {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(Color(0xFF003366), Color(0xFF1E88E5))
+                )
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        if (isLoading) {
+            val loadingAnimation by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anime2))
+            LottieAnimation(
+                composition = loadingAnimation,
+                iterations = LottieConstants.IterateForever,
+                modifier = Modifier.size(150.dp)
+            )
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(0.9f)
+                    .background(Color.White, RoundedCornerShape(24.dp))
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Animated Logo
+                val logoComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anime3))
+                LottieAnimation(
+                    composition = logoComposition,
+                    iterations = LottieConstants.IterateForever,
+                    modifier = Modifier
+                        .size(120.dp)
+                        .padding(bottom = 16.dp)
+                )
+
+                // Room Allotment Button
+                Button(
+                    onClick = { navController.navigate(Screen.RoomAllotment.route) },
+                    enabled = roomNumber.isNullOrEmpty(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
+                    shape = RoundedCornerShape(24.dp)
+                ) {
+                    Text("Room Allotment", color = Color.White, fontSize = 16.sp)
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Rules Button
+                Button(
+                    onClick = { /* Navigate to rules screen */ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF9800)),
+                    shape = RoundedCornerShape(24.dp)
+                ) {
+                    Text("Rules", color = Color.White, fontSize = 16.sp)
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Problems Button
+                Button(
+                    onClick = { navController.navigate(Screen.HomeScreen.route) },
+                    enabled = !roomNumber.isNullOrEmpty(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF44336)),
+                    shape = RoundedCornerShape(24.dp)
+                ) {
+                    Text("Problems", color = Color.White, fontSize = 16.sp)
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Logout
+                Button(
+                    onClick = {
                         authViewModel.logout()
                         navController.navigate(Screen.DefaultScreen.route) {
                             popUpTo(Screen.HomeScreen.route) { inclusive = true }
-                            popUpTo(0) // Ensure to pop to the root
                         }
-                    }) {
-                        Icon(
-                            Icons.Default.ExitToApp,
-                            contentDescription = "Logout",
-                            tint = Color.White
-                        )
-                    }
-                }
-            )
-        }
-    ) { paddingValues ->
-        if (isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFF003366)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Loading...",
-                    color = Color.White,
-                    fontSize = 18.sp
-                )
-            }
-        } else {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFF180b42))
-                    .padding(paddingValues),
-                contentAlignment = Alignment.Center
-            ){
-                Column(
+                    },
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        .background(Color.White, shape = RoundedCornerShape(16.dp)) // White container with rounded corners
-                        .padding(32.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E88E5)),
+                    shape = RoundedCornerShape(24.dp)
                 ) {
-
-                    Image(
-                        painter = painterResource(id = R.drawable.jlogo), // Add logo if used in login/signup
-                        contentDescription = "APP_LOGO",
-                        modifier = Modifier.size(80.dp).padding(bottom = 16.dp)
-                    )
-
-                    Button(
-                        onClick = { navController.navigate(Screen.RoomAllotment.route) },
-                        enabled = roomNumber.isNullOrEmpty(), // Enable if roomNumber is empty
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3B5998)), // Blue button color
-                        shape = RoundedCornerShape(24.dp)
-                    ) {
-                        Text(text = "Allotment", color = Color.White)
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Button(
-                        onClick = { /* Navigate to rules screen */ },
-                        enabled = true, // Rules button can always be enabled
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3B5998)),
-                        shape = RoundedCornerShape(24.dp)
-                    ) {
-                        Text(text = "Rules", color = Color.White)
-                    }
-
-                    Spacer(modifier = Modifier.padding(16.dp))
-
-                    Button(
-                        onClick = { navController.navigate(Screen.HomeScreen.route) },
-                        enabled = !roomNumber.isNullOrEmpty(), // Enable if roomNumber is not empty
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3B5998)), // Dark red color for Problems button
-                        shape = RoundedCornerShape(24.dp)
-
-                    ) {
-                        Text(text = "Problems")
-                    }
+                    Text("Logout", color = Color.White, fontSize = 16.sp)
                 }
             }
         }

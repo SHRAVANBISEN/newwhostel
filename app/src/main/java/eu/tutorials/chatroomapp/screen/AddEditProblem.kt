@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
@@ -32,6 +33,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -58,24 +60,23 @@ fun AddEditDetailView(
     viewModel: WishViewModel = viewModel(),
     authViewModel: AuthViewModel = viewModel()
 ) {
-    val systemUiController = rememberSystemUiController()//...
-    val statusBarColor = Color.Black //..
-    //THIS LAUNCHEDEFFECT FUNCTION HELPS YOU TO GET THE STATUS
-    // BAR TRANSPARENT ONCE YOU OPEN THE APP ,AUTOMATICALLY WITHOUT ANY DELAY
+    val systemUiController = rememberSystemUiController()
+    val statusBarColor = colorResource(id = eu.tutorials.chatroomapp.R.color.black)
+
+    // Set status bar color
     LaunchedEffect(true) {
         systemUiController.setStatusBarColor(
             color = statusBarColor,
-            darkIcons = true
+            darkIcons = false
         )
     }
+
     // State to hold the room number
     var roomNumber by remember { mutableStateOf<Int?>(null) }
 
     // Fetch the room number
     LaunchedEffect(Unit) {
-        getRoomNumberFromAuth { number ->
-            roomNumber = number
-        }
+        getRoomNumberFromAuth { number -> roomNumber = number }
     }
 
     val wishTitleState by viewModel.wishTitleState.collectAsState()
@@ -83,84 +84,101 @@ fun AddEditDetailView(
 
     val scope = rememberCoroutineScope()
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Scaffold(
-            backgroundColor = Color.Transparent,
-            topBar = {
-                CenterAlignedTopAppBar(modifier = Modifier.fillMaxWidth(),
-                    scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
-                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                        containerColor = colorResource(id = eu.tutorials.chatroomapp.R.color.black)
-                    ),
-                    title = {
-                        Text(
-                            text = "Add Problems",
-                            color = colorResource(id = eu.tutorials.chatroomapp.R.color.white),
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            navController.navigate(Screen.HomeScreen.route) {
-                                popUpTo(Screen.HomeScreen.route) { inclusive = true }
-                            }
-                        }) {
-                            Icon(
-                                Icons.Default.ArrowBack,
-                                contentDescription = "Back",
-                                tint = Color.White
-                            )
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                modifier = Modifier.fillMaxWidth(),
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color.Transparent // Consistent transparent container
+                ),
+                title = {
+                    Text(
+                        text = "Add Problem",
+                        color = Color.Black,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.navigate(Screen.HomeScreen.route) {
+                            popUpTo(Screen.HomeScreen.route) { inclusive = true }
                         }
+                    }) {
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                            tint = Color.Black
+                        )
                     }
-
+                }
+            )
+        },
+        backgroundColor = Color.Transparent // Consistent background transparency
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background( // Gradient background to match HomeView
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFF6A11CB), // Top gradient color
+                            Color(0xFF2575FC)  // Bottom gradient color
+                        )
+                    )
                 )
-            },
+                .padding(16.dp)
         ) {
-
             Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // Title Input
                 OutlinedTextField(
                     value = wishTitleState,
                     onValueChange = { viewModel.onWishTitleChanged(it) },
-                    label = {
-                        androidx.compose.material3.Text(
-                            text = "Text", color = Color.Black,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            modifier = Modifier.padding(bottom = 22.dp, start = 5.dp,)
-                        )
-                    },
-
+                    label = { Text("Title", color = Color.White) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 15.dp, vertical = 20.dp)
-                        .background(Color.Transparent),
-                    shape = RoundedCornerShape(20.dp),
-                    textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 16.sp),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        // using predefined Color
-                        textColor = Color.Black,
-                        // using our own colors in Res.Values.Color
-                        backgroundColor = colorResource(id = eu.tutorials.chatroomapp.R.color.black),
-                        focusedBorderColor = colorResource(id = eu.tutorials.chatroomapp.R.color.black),
-                        unfocusedBorderColor = colorResource(id = eu.tutorials.chatroomapp.R.color.black),
-                        cursorColor = colorResource(id = eu.tutorials.chatroomapp.R.color.black),
+                        .padding(bottom = 16.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    textStyle = MaterialTheme.typography.bodyLarge.copy(
+                        color = Color.White,
+                        fontSize = 16.sp
                     ),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = Color.White,
+                        backgroundColor = Color.Transparent,
+                        focusedBorderColor = Color.White,
+                        unfocusedBorderColor = Color.Gray,
+                        cursorColor = Color.White
+                    )
                 )
 
+                // Description Input
                 OutlinedTextField(
                     value = wishDescriptionState,
                     onValueChange = { viewModel.onWishDescriptionChanged(it) },
-                    label = { Text("Description") },
+                    label = { Text("Description", color = Color.White) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp),
+                        .padding(bottom = 16.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    textStyle = MaterialTheme.typography.bodyLarge.copy(
+                        color = Color.White,
+                        fontSize = 16.sp
+                    ),
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = Color.White,
+                        backgroundColor = Color.Transparent,
+                        focusedBorderColor = Color.White,
+                        unfocusedBorderColor = Color.Gray,
+                        cursorColor = Color.White
+                    )
                 )
 
+                // Add Problem Button
                 Button(
                     onClick = {
                         if (wishTitleState.isNotBlank() && wishDescriptionState.isNotBlank()) {
@@ -191,14 +209,24 @@ fun AddEditDetailView(
                             ).show()
                         }
                     },
-                    modifier = Modifier.padding(top = 16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                        .height(48.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color.White,
+                        contentColor = Color.Black
+                    ),
+                    shape = RoundedCornerShape(24.dp)
                 ) {
-                    Text(text = "Add Problem")
+                    Text(text = "Add Problem", fontSize = 16.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
     }
 }
+
+
 //THESE TWO FUNCTIONS ARE GAME CHANGER
 fun getUserIdFromAuth(): String {
     val auth = FirebaseAuth.getInstance()

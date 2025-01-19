@@ -28,10 +28,13 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -54,15 +57,6 @@ fun HomeView(
     val coroutineScope = rememberCoroutineScope()
     val authResult by authViewModel.authResult.observeAsState()
 
-    val systemUiController = rememberSystemUiController()
-    val statusBarColor = Color.Black
-    LaunchedEffect(true) {
-        systemUiController.setStatusBarColor(
-            color = statusBarColor,
-            darkIcons = true
-        )
-    }
-
     val scaffoldState = rememberScaffoldState()
 
     LaunchedEffect(Unit) {
@@ -78,31 +72,49 @@ fun HomeView(
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
-            CenterAlignedTopAppBar(
-                modifier = Modifier.fillMaxWidth(),
-                scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = colorResource(id = R.color.black)
-                ),
-                title = { Text(text = "Problems", color = colorResource(id = R.color.white)) },
-                actions = {
-                    IconButton(onClick = {
-                        authViewModel.logout()
-                        navController.navigate(Screen.DefaultScreen.route) {
-                            popUpTo(Screen.HomeScreen.route) { inclusive = true }
-                            popUpTo(0) // Ensure to pop to the root
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(color = Color.White)
+            ) {
+                CenterAlignedTopAppBar(
+                    modifier = Modifier.fillMaxWidth(),
+                    scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = Color.Transparent
+                    ),
+                    title = {
+                        Text(
+                            text = "Problems",
+                            color = Color.Black,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.h6 // Change typography for a modern look
+                        )
+                    },
+                    actions = {
+                        IconButton(onClick = {
+                            authViewModel.logout()
+                            navController.navigate(Screen.DefaultScreen.route) {
+                                popUpTo(Screen.HomeScreen.route) { inclusive = true }
+                                popUpTo(0) // Ensure to pop to the root
+                            }
+                        }) {
+                            Icon(
+                                Icons.Default.ExitToApp,
+                                contentDescription = "Logout",
+                                tint = Color.Black
+                            )
                         }
-                    }) {
-                        Icon(Icons.Default.ExitToApp, contentDescription = "Logout", tint = Color.White)
                     }
-                }
-            )
+                )
+            }
         },
         floatingActionButton = {
             FloatingActionButton(
                 modifier = Modifier.padding(all = 20.dp),
-                contentColor = Color.White,
-                backgroundColor = Color.Black,
+                contentColor = Color.Black,
+                backgroundColor = Color.White,
                 onClick = {
                     navController.navigate(Screen.AddScreen.route + "/0")
                 }
@@ -111,9 +123,17 @@ fun HomeView(
             }
         }
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(Color(0xFF6A11CB), Color(0xFF1E88E5))
+                    )
+                )
+        ) {
             if (isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center), color = Color.White)
             } else {
                 val wishlist by viewModel.wishes.collectAsState()
                 LazyColumn(modifier = Modifier.padding(it).fillMaxSize()) {
@@ -130,7 +150,8 @@ fun HomeView(
                             state = dismissState,
                             background = {
                                 val color by animateColorAsState(
-                                    if (dismissState.dismissDirection == DismissDirection.EndToStart) Color.Black else Color.Transparent , label = ""
+                                    if (dismissState.dismissDirection == DismissDirection.EndToStart) Color.Red else Color.Transparent,
+                                    label = ""
                                 )
                                 val alignment = Alignment.CenterEnd
                                 Box(
@@ -140,9 +161,7 @@ fun HomeView(
                                         .padding(horizontal = 20.dp),
                                     contentAlignment = alignment
                                 ) {
-                                    Icon(Icons.Default.Delete,
-                                        contentDescription = "Delete Icon",
-                                        tint = Color.White)
+                                    Icon(Icons.Default.Delete, contentDescription = "Delete Icon", tint = Color.White)
                                 }
                             },
                             directions = setOf(DismissDirection.EndToStart),
@@ -167,13 +186,14 @@ fun WishItem(wish: Wish, onClick: () -> Unit) {
         shape = RoundedCornerShape(5.dp),
         modifier = Modifier
             .padding(16.dp)
-            .fillMaxWidth()
-            ,
+            .fillMaxWidth(),
         elevation = 8.dp,
-        backgroundColor = Color.White,
+        backgroundColor = Color.White
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .padding(16.dp)
+                .clickable { onClick() }
         ) {
             Text(text = wish.title, style = MaterialTheme.typography.h6)
             Text(text = wish.description, style = MaterialTheme.typography.body1)

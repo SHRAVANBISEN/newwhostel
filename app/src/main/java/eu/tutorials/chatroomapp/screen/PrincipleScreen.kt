@@ -21,6 +21,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -45,41 +46,39 @@ fun PrincipleScreen(
     authViewModel: AuthViewModel = viewModel()
 ) {
 
-    // Set up the system UI controller for status bar colors
+    // System UI Controller for status bar
     val systemUiController = rememberSystemUiController()
-    val statusBarColor = Color.Black
+    val statusBarColor = colorResource(id = R.color.black)
     LaunchedEffect(true) {
         systemUiController.setStatusBarColor(
             color = statusBarColor,
-            darkIcons = true
+            darkIcons = false
         )
     }
 
-    // Scaffold layout with a top bar
+    // Scaffold with a top bar
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                modifier = Modifier.fillMaxWidth(),
-                scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = colorResource(id = R.color.black)
                 ),
-
                 title = {
-                    androidx.compose.material.Text(
-                        text = "HOSTELS",
-                        color = colorResource(id = R.color.white)
+                    Text(
+                        text = "Hostels",
+                        color = Color.White,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
                     )
                 },
                 actions = {
-                    androidx.compose.material.IconButton(onClick = {
+                    IconButton(onClick = {
                         authViewModel.logout()
                         navController.navigate(Screen.DefaultScreen.route) {
-                            popUpTo(Screen.BVBHOSTEL.route) { inclusive = true }
-                            popUpTo(0) // Ensure to pop to the root
+                            popUpTo(Screen.DefaultScreen.route) { inclusive = true }
                         }
                     }) {
-                        androidx.compose.material.Icon(
+                        Icon(
                             Icons.Default.ExitToApp,
                             contentDescription = "Logout",
                             tint = Color.White
@@ -88,57 +87,69 @@ fun PrincipleScreen(
                 }
             )
         },
-        content = { paddingValues -> // Pass padding from scaffold to content
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(Color.Gray, Color.Black)
+        containerColor = colorResource(id = R.color.black),
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.DarkGray,
+                            Color.Black
                         )
                     )
-                    .padding(paddingValues) // Apply padding from the scaffold content
+                )
+                .padding(paddingValues)
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top
             ) {
+                val categories = listOf("ALP", "BVB", "GANGA", "LBS", "AKK")
 
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Top // This ensures that the Lazy Grid doesn't take all space
+                // Lazy Grid for Categories
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2), // Use two columns for a better look
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    val categories = listOf("ALP", "BVB", "GANGA", "LBS", "AKK")
-
-                    // Lazy Grid Layout for displaying the items
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(1), // One column as in the original code
-                        modifier = Modifier
-                            .weight(1f) // Give Lazy Grid a weight so it doesn't fill all space
-                            .padding(16.dp), // Spacing for better aesthetics
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        items(categories) { cat ->
-                            BrowserItem(navController, cat)
-                        }
+                    items(categories) { cat ->
+                        BrowserItem(navController, cat)
                     }
+                }
 
-                    // Button for room details
-                    Button(
-                        onClick = { navController.navigate(Screen.RoomDet.route) },
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Text(text = "Room Details")
-                    }
+                // Room Details Button
+                Button(
+                    onClick = { navController.navigate(Screen.RoomDet.route) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .height(50.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(id = R.color.white), // Use containerColor instead of backgroundColor
+                        contentColor = colorResource(id = R.color.black)
+                    )
+                ) {
+                    Text(
+                        text = "Room Details",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }
-    )
+    }
 }
-
 
 @SuppressLint("UnusedCrossfadeTargetStateParameter")
 @Composable
 fun BrowserItem(navController: NavController, cat: String) {
-    // Map of category images
     val categoryImages = mapOf(
         "ALP" to R.drawable.alp,
         "BVB" to R.drawable.bvb,
@@ -147,27 +158,26 @@ fun BrowserItem(navController: NavController, cat: String) {
         "AKK" to R.drawable.akk
     )
 
-    // Get drawable from the map or use a default
     val drawable = categoryImages[cat] ?: R.drawable.ucbg
 
-    // Add animation on click
     var clicked by remember { mutableStateOf(false) }
     val scale = animateFloatAsState(
-        targetValue = if (clicked) 1.1f else 1f, // Scale up when clicked
+        targetValue = if (clicked) 1.1f else 1f,
         animationSpec = tween(durationMillis = 300)
     )
 
-    // Card with shadow and corner rounding for better look
     Card(
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(12.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(8.dp, RoundedCornerShape(16.dp))
+            .shadow(8.dp, RoundedCornerShape(12.dp))
             .clickable {
                 clicked = !clicked
                 navigateToScreen(navController, cat)
             },
-        elevation = CardDefaults.cardElevation(8.dp)
+        colors = CardDefaults.cardColors(
+            containerColor = colorResource(id = R.color.black)
+        )
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
@@ -179,15 +189,18 @@ fun BrowserItem(navController: NavController, cat: String) {
                     scaleY = scale.value
                 )
         ) {
-            // Image with Crossfade animation
-            Crossfade(targetState = clicked) {
+            Image(
+                painter = painterResource(id = drawable),
+                contentDescription = cat,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(RoundedCornerShape(12.dp))
+            )
 
-            }
-
-            // Category Text
             Text(
                 text = cat,
-                fontSize = 18.sp,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 modifier = Modifier.padding(top = 8.dp)
@@ -203,6 +216,6 @@ fun navigateToScreen(navController: NavController, cat: String) {
         "AKK" -> navController.navigate(Screen.AKKAM.route)
         "ALP" -> navController.navigate(Screen.ALPHOSTEL.route)
         "GANGA" -> navController.navigate(Screen.GANGA.route)
-        // Add other cases if needed
     }
 }
+
